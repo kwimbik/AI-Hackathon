@@ -436,7 +436,7 @@ function endGame() {
             
             // Select sound to play
             if (babyFirstWord === 'ワンワン') {
-                soundToPlay = sounds.dog_sound;
+                soundToPlay = sounds.wanwan;
             } else if (babyFirstWord === 'バカ') {
                 soundToPlay = sounds.baka;
             }
@@ -478,7 +478,7 @@ function endGame() {
             
             // Select sound to play
             if (babyFirstWord === 'ワンワン') {
-                soundToPlay = sounds.dog_sound;
+                soundToPlay = sounds.wanwan;
             } else if (babyFirstWord === 'バカ') {
                 soundToPlay = sounds.baka;
             }
