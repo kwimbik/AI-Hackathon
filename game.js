@@ -260,14 +260,25 @@ function aiSpeak() {
 function showSpeechBubble(character, text) {
     const bubble = character.querySelector('.speech-bubble');
     const bubbleText = bubble.querySelector('.bubble-text');
+    const sprite = character.querySelector('.character-sprite');
     
     bubbleText.textContent = text;
     bubble.style.display = 'block';
     character.classList.add('reacting');
     
+    // Change sprite to speaking state if it has speaking animation
+    if (sprite && sprite.dataset.speaking) {
+        sprite.src = sprite.dataset.speaking;
+    }
+    
     setTimeout(() => {
         bubble.style.display = 'none';
         character.classList.remove('reacting');
+        
+        // Return sprite to normal state
+        if (sprite && sprite.dataset.normal) {
+            sprite.src = sprite.dataset.normal;
+        }
     }, 3000);
 }
 
@@ -275,16 +286,16 @@ function babyReact(mood) {
     const baby = document.getElementById('baby');
     const babySprite = baby.querySelector('.character-sprite');
     
-    if (mood === 'happy') {
-        babySprite.textContent = '😊';
+    if (mood === 'happy' && babySprite.dataset.happy) {
+        babySprite.src = babySprite.dataset.happy;
         setTimeout(() => {
-            babySprite.textContent = '👶';
+            babySprite.src = babySprite.dataset.normal;
         }, 2000);
-    } else if (mood === 'cry') {
-        babySprite.textContent = '😭';
+    } else if (mood === 'cry' && babySprite.dataset.crying) {
+        babySprite.src = babySprite.dataset.crying;
         sounds.crying.play();
         setTimeout(() => {
-            babySprite.textContent = '👶';
+            babySprite.src = babySprite.dataset.normal;
         }, 2000);
     }
 }
@@ -344,7 +355,7 @@ function startDogBarking() {
 
 function scheduleWeirdUncle() {
     // Appear between 30-50 seconds
-    const appearTime = 30 + Math.random() * 20;
+    const appearTime = 8;
     
     setTimeout(() => {
         if (!gameState.gameActive) return;
