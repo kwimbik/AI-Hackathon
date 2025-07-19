@@ -3,6 +3,21 @@
 
 ## 🎮 Quick Start
 
+### Method 1: Simple HTTP Server (Recommended for testing)
+1. **Navigate to the game directory:**
+   ```bash
+   cd AI-Hackathon
+   ```
+
+2. **Start Python HTTP server:**
+   ```bash
+   python3 -m http.server 8000
+   ```
+
+3. **Open your browser:**
+   Navigate to `http://localhost:8000`
+
+### Method 2: Node.js Server (If available)
 1. **Install dependencies:**
    ```bash
    npm install

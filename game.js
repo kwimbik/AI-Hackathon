@@ -5,7 +5,7 @@ const gameState = {
     aiCharacter: null,
     playerScore: 0,
     aiScore: 0,
-    timeRemaining: 60,
+    timeRemaining: 20,
     timerInterval: null,
     gameActive: false,
     currentOptions: [],
@@ -113,8 +113,10 @@ function startGame() {
     // Reset scores
     gameState.playerScore = 0;
     gameState.aiScore = 0;
-    gameState.timeRemaining = 60;
-    updateScoreDisplay();
+    gameState.timeRemaining = 20;
+    
+    // Hide scoreboard during gameplay
+    document.getElementById('score-display').style.display = 'none';
     
     // Show appropriate input area
     if (gameState.mode === 'easy') {
@@ -163,8 +165,12 @@ function generateEasyOptions() {
     const shuffled = [...options].sort(() => Math.random() - 0.5);
     gameState.currentOptions = shuffled.slice(0, 3);
     
+    // Assign scoring values to each option (+1, 0, -1)
+    const scores = [1, 0, -1].sort(() => Math.random() - 0.5);
+    
     document.querySelectorAll('.option-btn').forEach((btn, index) => {
         btn.textContent = gameState.currentOptions[index];
+        btn.dataset.score = scores[index];
     });
 }
 
@@ -172,7 +178,8 @@ function selectEasyOption(e) {
     if (!gameState.gameActive) return;
     
     const selectedText = e.target.textContent;
-    playerSpeak(selectedText);
+    const scoreValue = parseInt(e.target.dataset.score);
+    playerSpeak(selectedText, scoreValue);
     
     // Generate new options after a short delay
     setTimeout(generateEasyOptions, 1000);
@@ -183,27 +190,52 @@ function submitHardMode() {
     
     const text = playerInput.value.trim();
     if (text) {
-        playerSpeak(text);
+        // Calculate score for hard mode
+        let scoreValue = 0;
+        
+        // 50% chance to get +1 point
+        if (Math.random() > 0.5) {
+            scoreValue = 1;
+        }
+        
+        // Additional +1 if message is emotional or funny
+        const emotionalWords = ['好き', '大好き', '愛', 'かわいい', '素敵', '最高', '幸せ', '嬉しい', '楽しい', 'おもしろい', 'うれしい'];
+        const funnyWords = ['あはは', 'わはは', 'くすくす', 'ぷっ', 'きゃー', 'わーい', 'やったー', 'すごい', 'びっくり'];
+        
+        const isEmotional = emotionalWords.some(word => text.includes(word));
+        const isFunny = funnyWords.some(word => text.includes(word)) || text.includes('笑') || text.includes('！') || text.includes('!') || text.length > 20;
+        
+        if (isEmotional || isFunny) {
+            scoreValue = 1;
+        }
+        
+        playerSpeak(text, scoreValue);
         playerInput.value = '';
     }
 }
 
-function playerSpeak(text) {
+function playerSpeak(text, scoreValue = null) {
     const playerCharacter = document.getElementById(gameState.playerCharacter);
     showSpeechBubble(playerCharacter, text);
     
-    // Calculate baby's reaction
-    const reaction = calculateBabyReaction(text, gameState.playerCharacter);
+    // Use provided score value or calculate based on old logic
+    let pointsToAdd = 0;
+    if (scoreValue !== null) {
+        pointsToAdd = scoreValue;
+    } else {
+        pointsToAdd = calculateBabyReaction(text, gameState.playerCharacter);
+    }
     
-    if (reaction > 0) {
-        gameState.playerScore += reaction;
+    if (pointsToAdd > 0) {
+        gameState.playerScore += pointsToAdd;
         babyReact('happy');
         sounds.laughing.play();
+    } else if (pointsToAdd < 0) {
+        gameState.playerScore += pointsToAdd; // This will subtract since pointsToAdd is negative
+        babyReact('cry');
     } else {
         babyReact('neutral');
     }
-    
-    updateScoreDisplay();
 }
 
 function aiSpeak() {
@@ -339,25 +371,46 @@ function endGame() {
     gameState.gameActive = false;
     clearInterval(gameState.timerInterval);
     
-    // Determine winner
+    // Determine winner based on mode
     let resultTitle, resultMessage;
     const baby = document.getElementById('baby');
     
-    if (gameState.playerScore > gameState.aiScore) {
-        resultTitle = '勝利！🎉';
-        resultMessage = `赤ちゃんの初めての言葉は「${gameState.playerCharacter === 'mom' ? 'ママ' : 'パパ'}」でした！`;
-        showSpeechBubble(baby, gameState.playerCharacter === 'mom' ? 'ママ！' : 'パパ！');
-    } else if (gameState.aiScore > gameState.playerScore) {
-        resultTitle = '敗北...😢';
-        resultMessage = `赤ちゃんの初めての言葉は「${gameState.aiCharacter === 'mom' ? 'ママ' : 'パパ'}」でした...`;
-        showSpeechBubble(baby, gameState.aiCharacter === 'mom' ? 'ママ！' : 'パパ！');
+    if (gameState.mode === 'hard') {
+        // Hard mode: Need 20+ points to win, otherwise random silly word
+        if (gameState.playerScore >= 20 && gameState.playerScore > gameState.aiScore) {
+            resultTitle = '勝利！🎉';
+            resultMessage = `赤ちゃんの初めての言葉は「${gameState.playerCharacter === 'mom' ? 'ママ' : 'パパ'}」でした！`;
+            showSpeechBubble(baby, gameState.playerCharacter === 'mom' ? 'ママ！' : 'パパ！');
+        } else if (gameState.aiScore >= 20 && gameState.aiScore > gameState.playerScore) {
+            resultTitle = '敗北...😢';
+            resultMessage = `赤ちゃんの初めての言葉は「${gameState.aiCharacter === 'mom' ? 'ママ' : 'パパ'}」でした...`;
+            showSpeechBubble(baby, gameState.aiCharacter === 'mom' ? 'ママ！' : 'パパ！');
+        } else {
+            // Neither has 20+ points or it's a tie - random silly word
+            const sillWords = ['ワンワン', 'おじさん', 'まんま', 'うんち', 'ばぶー', 'だー', 'あー'];
+            const randomWord = sillWords[Math.floor(Math.random() * sillWords.length)];
+            resultTitle = '予想外！😮';
+            resultMessage = `なんと赤ちゃんの初めての言葉は「${randomWord}」でした！`;
+            showSpeechBubble(baby, randomWord + '！');
+        }
     } else {
-        // Tie - random outcome
-        const outcomes = ['ワンワン', 'おじさん', 'まんま'];
-        const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
-        resultTitle = '引き分け！😮';
-        resultMessage = `なんと赤ちゃんの初めての言葉は「${randomOutcome}」でした！`;
-        showSpeechBubble(baby, randomOutcome + '！');
+        // Easy mode: Use original logic
+        if (gameState.playerScore > gameState.aiScore) {
+            resultTitle = '勝利！🎉';
+            resultMessage = `赤ちゃんの初めての言葉は「${gameState.playerCharacter === 'mom' ? 'ママ' : 'パパ'}」でした！`;
+            showSpeechBubble(baby, gameState.playerCharacter === 'mom' ? 'ママ！' : 'パパ！');
+        } else if (gameState.aiScore > gameState.playerScore) {
+            resultTitle = '敗北...😢';
+            resultMessage = `赤ちゃんの初めての言葉は「${gameState.aiCharacter === 'mom' ? 'ママ' : 'パパ'}」でした...`;
+            showSpeechBubble(baby, gameState.aiCharacter === 'mom' ? 'ママ！' : 'パパ！');
+        } else {
+            // Tie - random outcome
+            const outcomes = ['ワンワン', 'おじさん', 'まんま'];
+            const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+            resultTitle = '引き分け！😮';
+            resultMessage = `なんと赤ちゃんの初めての言葉は「${randomOutcome}」でした！`;
+            showSpeechBubble(baby, randomOutcome + '！');
+        }
     }
     
     // Wait a moment before showing results
@@ -381,11 +434,14 @@ function resetGame() {
     gameState.aiCharacter = null;
     gameState.playerScore = 0;
     gameState.aiScore = 0;
-    gameState.timeRemaining = 60;
+    gameState.timeRemaining = 20;
     gameState.gameActive = false;
     
     // Hide weird uncle
     document.getElementById('weird-uncle').style.display = 'none';
+    
+    // Show scoreboard again for next game
+    document.getElementById('score-display').style.display = 'block';
     
     // Reset screens
     resultScreen.classList.remove('active');
