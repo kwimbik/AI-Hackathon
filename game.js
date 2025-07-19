@@ -402,30 +402,30 @@ function endGame() {
     if (gameState.mode === 'hard') {
         // Hard mode: Need 20+ points to win, otherwise random silly word
         if (gameState.playerScore >= 20 && gameState.playerScore > gameState.aiScore) {
-            resultTitle = '勝利！🎉';
-            babyFirstWord = gameState.playerCharacter === 'mom' ? 'ママ' : 'パパ';
-            resultMessage = `赤ちゃんの初めての言葉は「${babyFirstWord}」でした！`;
+            // Neither has 20+ points or it's a tie - random silly word
+            const sillWords = ['ワンワン', 'バカ'];
+            babyFirstWord = sillWords[Math.floor(Math.random() * sillWords.length)];
+            resultTitle = '予想外！😮';
+            resultMessage = `なんと赤ちゃんの初めての言葉は「${babyFirstWord}」でした！`;
             
             // Select sound to play
-            if (gameState.playerCharacter === 'mom') {
-                const mamaSounds = [sounds.mama, sounds.mamimamimama];
-                soundToPlay = mamaSounds[Math.floor(Math.random() * mamaSounds.length)];
-            } else {
-                const papaSounds = [sounds.papa, sounds.papaiya];
-                soundToPlay = papaSounds[Math.floor(Math.random() * papaSounds.length)];
+            if (babyFirstWord === 'ワンワン') {
+                soundToPlay = sounds.wanwan;
+            } else if (babyFirstWord === 'バカ') {
+                soundToPlay = sounds.baka;
             }
         } else if (gameState.aiScore >= 20 && gameState.aiScore > gameState.playerScore) {
-            resultTitle = '敗北...😢';
-            babyFirstWord = gameState.aiCharacter === 'mom' ? 'ママ' : 'パパ';
-            resultMessage = `赤ちゃんの初めての言葉は「${babyFirstWord}」でした...`;
+            // Neither has 20+ points or it's a tie - random silly word
+            const sillWords = ['ワンワン', 'バカ'];
+            babyFirstWord = sillWords[Math.floor(Math.random() * sillWords.length)];
+            resultTitle = '予想外！😮';
+            resultMessage = `なんと赤ちゃんの初めての言葉は「${babyFirstWord}」でした！`;
             
             // Select sound to play
-            if (gameState.aiCharacter === 'mom') {
-                const mamaSounds = [sounds.mama, sounds.mamimamimama];
-                soundToPlay = mamaSounds[Math.floor(Math.random() * mamaSounds.length)];
-            } else {
-                const papaSounds = [sounds.papa, sounds.papaiya];
-                soundToPlay = papaSounds[Math.floor(Math.random() * papaSounds.length)];
+            if (babyFirstWord === 'ワンワン') {
+                soundToPlay = sounds.wanwan;
+            } else if (babyFirstWord === 'バカ') {
+                soundToPlay = sounds.baka;
             }
         } else {
             // Neither has 20+ points or it's a tie - random silly word
