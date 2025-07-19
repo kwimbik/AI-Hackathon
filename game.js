@@ -378,16 +378,6 @@ function scheduleWeirdUncle() {
         setTimeout(() => {
             sounds.ojisan.play(); // 変なおじさんが話すときにojisan.m4aサウンドを再生
             showSpeechBubble(weirdUncle, 'おじさんだよ〜！');
-
-            
-            // Small chance baby says おじさん
-            if (Math.random() > 0.7) {
-                setTimeout(() => {
-                    const baby = document.getElementById('baby');
-                    showSpeechBubble(baby, 'おじさん！');
-                    babyReact('happy');
-                }, 1500);
-            }
         }, 500);
     }, appearTime * 1000);
 }
@@ -396,118 +386,114 @@ function endGame() {
     gameState.gameActive = false;
     clearInterval(gameState.timerInterval);
     
-    // Determine winner based on mode
-    let resultTitle, resultMessage;
-    const baby = document.getElementById('baby');
+    // Determine winner and baby's first word
+    let resultTitle, resultMessage, babyFirstWord, soundToPlay;
     
     if (gameState.mode === 'hard') {
         // Hard mode: Need 20+ points to win, otherwise random silly word
         if (gameState.playerScore >= 20 && gameState.playerScore > gameState.aiScore) {
             resultTitle = '勝利！🎉';
-            resultMessage = `赤ちゃんの初めての言葉は「${gameState.playerCharacter === 'mom' ? 'ママ' : 'パパ'}」でした！`;
-            showSpeechBubble(baby, gameState.playerCharacter === 'mom' ? 'ママ！' : 'パパ！');
+            babyFirstWord = gameState.playerCharacter === 'mom' ? 'ママ' : 'パパ';
+            resultMessage = `赤ちゃんの初めての言葉は「${babyFirstWord}」でした！`;
             
-            // Play mama or papa sound randomly
+            // Select sound to play
             if (gameState.playerCharacter === 'mom') {
                 const mamaSounds = [sounds.mama, sounds.mamimamimama];
-                const randomMamaSound = mamaSounds[Math.floor(Math.random() * mamaSounds.length)];
-                randomMamaSound.play();
+                soundToPlay = mamaSounds[Math.floor(Math.random() * mamaSounds.length)];
             } else {
                 const papaSounds = [sounds.papa, sounds.papaiya];
-                const randomPapaSound = papaSounds[Math.floor(Math.random() * papaSounds.length)];
-                randomPapaSound.play();
+                soundToPlay = papaSounds[Math.floor(Math.random() * papaSounds.length)];
             }
         } else if (gameState.aiScore >= 20 && gameState.aiScore > gameState.playerScore) {
             resultTitle = '敗北...😢';
-            resultMessage = `赤ちゃんの初めての言葉は「${gameState.aiCharacter === 'mom' ? 'ママ' : 'パパ'}」でした...`;
-            showSpeechBubble(baby, gameState.aiCharacter === 'mom' ? 'ママ！' : 'パパ！');
+            babyFirstWord = gameState.aiCharacter === 'mom' ? 'ママ' : 'パパ';
+            resultMessage = `赤ちゃんの初めての言葉は「${babyFirstWord}」でした...`;
             
-            // Play mama or papa sound randomly
+            // Select sound to play
             if (gameState.aiCharacter === 'mom') {
                 const mamaSounds = [sounds.mama, sounds.mamimamimama];
-                const randomMamaSound = mamaSounds[Math.floor(Math.random() * mamaSounds.length)];
-                randomMamaSound.play();
+                soundToPlay = mamaSounds[Math.floor(Math.random() * mamaSounds.length)];
             } else {
                 const papaSounds = [sounds.papa, sounds.papaiya];
-                const randomPapaSound = papaSounds[Math.floor(Math.random() * papaSounds.length)];
-                randomPapaSound.play();
+                soundToPlay = papaSounds[Math.floor(Math.random() * papaSounds.length)];
             }
         } else {
             // Neither has 20+ points or it's a tie - random silly word
-            const sillWords = ['ワンワン', 'バカ'];
-            const randomWord = sillWords[Math.floor(Math.random() * sillWords.length)];
+            const sillWords = ['ワンワン', 'おじさん'];
+            babyFirstWord = sillWords[Math.floor(Math.random() * sillWords.length)];
             resultTitle = '予想外！😮';
-            resultMessage = `なんと赤ちゃんの初めての言葉は「${randomWord}」でした！`;
-            showSpeechBubble(baby, randomWord + '！');
+            resultMessage = `なんと赤ちゃんの初めての言葉は「${babyFirstWord}」でした！`;
             
-            // Play appropriate sound
-            if (randomWord === 'ワンワン') {
-                sounds.wanwan.play();
-            } else if (randomWord === 'バカ') {
-                sounds.baka.play();
+            // Select sound to play
+            if (babyFirstWord === 'ワンワン') {
+                soundToPlay = sounds.wanwan;
+            } else if (babyFirstWord === 'おじさん') {
+                soundToPlay = sounds.ojisan;
             }
         }
     } else {
         // Easy mode: Use original logic
         if (gameState.playerScore > gameState.aiScore) {
             resultTitle = '勝利！🎉';
-            resultMessage = `赤ちゃんの初めての言葉は「${gameState.playerCharacter === 'mom' ? 'ママ' : 'パパ'}」でした！`;
-            showSpeechBubble(baby, gameState.playerCharacter === 'mom' ? 'ママ！' : 'パパ！');
+            babyFirstWord = gameState.playerCharacter === 'mom' ? 'ママ' : 'パパ';
+            resultMessage = `赤ちゃんの初めての言葉は「${babyFirstWord}」でした！`;
             
-            // Play mama or papa sound randomly
+            // Select sound to play
             if (gameState.playerCharacter === 'mom') {
                 const mamaSounds = [sounds.mama, sounds.mamimamimama];
-                const randomMamaSound = mamaSounds[Math.floor(Math.random() * mamaSounds.length)];
-                randomMamaSound.play();
+                soundToPlay = mamaSounds[Math.floor(Math.random() * mamaSounds.length)];
             } else {
                 const papaSounds = [sounds.papa, sounds.papaiya];
-                const randomPapaSound = papaSounds[Math.floor(Math.random() * papaSounds.length)];
-                randomPapaSound.play();
+                soundToPlay = papaSounds[Math.floor(Math.random() * papaSounds.length)];
             }
         } else if (gameState.aiScore > gameState.playerScore) {
             resultTitle = '敗北...😢';
-            resultMessage = `赤ちゃんの初めての言葉は「${gameState.aiCharacter === 'mom' ? 'ママ' : 'パパ'}」でした...`;
-            showSpeechBubble(baby, gameState.aiCharacter === 'mom' ? 'ママ！' : 'パパ！');
+            babyFirstWord = gameState.aiCharacter === 'mom' ? 'ママ' : 'パパ';
+            resultMessage = `赤ちゃんの初めての言葉は「${babyFirstWord}」でした...`;
             
-            // Play mama or papa sound randomly
+            // Select sound to play
             if (gameState.aiCharacter === 'mom') {
                 const mamaSounds = [sounds.mama, sounds.mamimamimama];
-                const randomMamaSound = mamaSounds[Math.floor(Math.random() * mamaSounds.length)];
-                randomMamaSound.play();
+                soundToPlay = mamaSounds[Math.floor(Math.random() * mamaSounds.length)];
             } else {
                 const papaSounds = [sounds.papa, sounds.papaiya];
-                const randomPapaSound = papaSounds[Math.floor(Math.random() * papaSounds.length)];
-                randomPapaSound.play();
+                soundToPlay = papaSounds[Math.floor(Math.random() * papaSounds.length)];
             }
         } else {
             // Tie - random outcome
-            const outcomes = ['ワンワン', 'バカ'];
-            const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+            const outcomes = ['ワンワン', 'おじさん'];
+            babyFirstWord = outcomes[Math.floor(Math.random() * outcomes.length)];
             resultTitle = '引き分け！😮';
-            resultMessage = `なんと赤ちゃんの初めての言葉は「${randomOutcome}」でした！`;
-            showSpeechBubble(baby, randomOutcome + '！');
+            resultMessage = `なんと赤ちゃんの初めての言葉は「${babyFirstWord}」でした！`;
             
-            // Play appropriate sound
-            if (randomOutcome === 'ワンワン') {
-                sounds.wanwan.play();
-            } else if (randomOutcome === 'バカ') {
-                sounds.baka.play();
+            // Select sound to play
+            if (babyFirstWord === 'ワンワン') {
+                soundToPlay = sounds.wanwan;
+            } else if (babyFirstWord === 'おじさん') {
+                soundToPlay = sounds.ojisan;
             }
         }
     }
     
-    // Wait a moment before showing results
+    // Immediately go to results screen
+    gameScreen.classList.remove('active');
+    resultScreen.classList.add('active');
+    
+    // Set up result screen content
+    document.getElementById('result-title').textContent = resultTitle;
+    document.getElementById('result-message').textContent = resultMessage;
+    document.getElementById('final-player-label').textContent = playerLabel.textContent;
+    document.getElementById('final-ai-label').textContent = aiLabel.textContent;
+    document.getElementById('final-player-score').textContent = gameState.playerScore;
+    document.getElementById('final-ai-score').textContent = gameState.aiScore;
+    
+    // Show baby's first word after a short delay
     setTimeout(() => {
-        gameScreen.classList.remove('active');
-        resultScreen.classList.add('active');
-        
-        document.getElementById('result-title').textContent = resultTitle;
-        document.getElementById('result-message').textContent = resultMessage;
-        document.getElementById('final-player-label').textContent = playerLabel.textContent;
-        document.getElementById('final-ai-label').textContent = aiLabel.textContent;
-        document.getElementById('final-player-score').textContent = gameState.playerScore;
-        document.getElementById('final-ai-score').textContent = gameState.aiScore;
-    }, 3000);
+        document.getElementById('baby-first-word').textContent = babyFirstWord + '！';
+        if (soundToPlay) {
+            soundToPlay.play();
+        }
+    }, 1000);
 }
 
 function resetGame() {
@@ -525,6 +511,9 @@ function resetGame() {
     
     // Show scoreboard again for next game
     document.getElementById('score-display').style.display = 'block';
+    
+    // Reset result screen baby first word
+    document.getElementById('baby-first-word').textContent = '';
     
     // Reset screens
     resultScreen.classList.remove('active');

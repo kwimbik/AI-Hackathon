@@ -295,6 +295,27 @@ body {
 #result-screen {
     background: linear-gradient(to bottom, #ffd89b, #f0f8ff);
     text-align: center;
+    position: relative;
+}
+
+.baby-result {
+    position: absolute;
+    right: 100px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.baby-result .character-sprite {
+    width: 200px;
+    height: 200px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.baby-result .speech-bubble {
+    font-size: 1.5rem;
+    min-width: 200px;
+    background-color: #ffeb3b;
+    border: 3px solid #ff9800;
 }
 
 #result-title {
