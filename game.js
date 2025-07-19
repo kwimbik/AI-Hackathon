@@ -376,8 +376,9 @@ function scheduleWeirdUncle() {
         weirdUncle.style.display = 'block';
         
         setTimeout(() => {
-            showSpeechBubble(weirdUncle, 'おじさんだよ〜！');
             sounds.ojisan.play(); // 変なおじさんが話すときにojisan.m4aサウンドを再生
+            showSpeechBubble(weirdUncle, 'おじさんだよ〜！');
+
             
             // Small chance baby says おじさん
             if (Math.random() > 0.7) {
