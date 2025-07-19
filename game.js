@@ -103,7 +103,8 @@ document.getElementById('play-again-btn').addEventListener('click', resetGame);
 
 // Game Functions
 function selectMode(e) {
-    gameState.mode = e.target.dataset.mode;
+    const button = e.target.closest('.mode-btn');
+    gameState.mode = button ? button.dataset.mode : e.target.dataset.mode;
     modeSelection.style.display = 'none';
     characterSelection.style.display = 'block';
 }
