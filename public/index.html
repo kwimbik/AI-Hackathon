@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ママとパパどっちが好きなの？</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Title Screen -->
+        <div id="title-screen" class="screen active">
+            <h1>ママとパパどっちが好きなの？</h1>
+            <h2>赤ちゃんの初めての言葉バトル</h2>
+            <div class="mode-selection">
+                <h3>難易度を選んでください</h3>
+                <button class="mode-btn" data-mode="easy">よちよちモード（かんたん）</button>
+                <button class="mode-btn" data-mode="hard">ガチ育児モード（むずかしい）</button>
+            </div>
+            <div class="character-selection" style="display: none;">
+                <h3>あなたは誰？</h3>
+                <button class="character-btn" data-character="mom">ママ</button>
+                <button class="character-btn" data-character="dad">パパ</button>
+            </div>
+            <div class="connection-status">
+                <div id="connection-indicator" class="connecting">サーバーに接続中...</div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <!-- Timer Display -->
+            <div id="timer-display">
+                <span id="timer">60</span>秒
+            </div>
+
+            <!-- Score Display -->
+            <div id="score-display">
+                <div class="player-score">
+                    <span id="player-label">ママ</span>: <span id="player-score">0</span>
+                </div>
+                <div class="ai-score">
+                    <span id="ai-label">パパ</span>: <span id="ai-score">0</span>
+                </div>
+            </div>
+
+            <!-- Game Scene -->
+            <div id="game-scene">
+                <!-- Window for 変なおじさん -->
+                <div id="window" class="window">
+                    <div id="weird-uncle" class="character weird-uncle" style="display: none;">
+                        <div class="character-sprite">👨‍🦲</div>
+                        <div class="speech-bubble" style="display: none;">
+                            <span class="bubble-text"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mom Character -->
+                <div id="mom" class="character parent mom">
+                    <div class="character-sprite">👩</div>
+                    <div class="speech-bubble" style="display: none;">
+                        <span class="bubble-text"></span>
+                    </div>
+                </div>
+
+                <!-- Baby Character -->
+                <div id="baby" class="character baby">
+                    <div class="character-sprite">👶</div>
+                    <div class="speech-bubble" style="display: none;">
+                        <span class="bubble-text"></span>
+                    </div>
+                </div>
+
+                <!-- Dad Character -->
+                <div id="dad" class="character parent dad">
+                    <div class="character-sprite">👨</div>
+                    <div class="speech-bubble" style="display: none;">
+                        <span class="bubble-text"></span>
+                    </div>
+                </div>
+
+                <!-- Dog Character -->
+                <div id="dog" class="character dog">
+                    <div class="character-sprite">🐕</div>
+                    <div class="speech-bubble" style="display: none;">
+                        <span class="bubble-text">ワンワン！</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div id="input-area">
+                <!-- Easy Mode Options -->
+                <div id="easy-mode-options" class="input-options" style="display: none;">
+                    <h3>言葉を選んでください：</h3>
+                    <button class="option-btn" data-option="0"></button>
+                    <button class="option-btn" data-option="1"></button>
+                    <button class="option-btn" data-option="2"></button>
+                </div>
+
+                <!-- Hard Mode Input -->
+                <div id="hard-mode-input" class="input-options" style="display: none;">
+                    <h3>赤ちゃんに話しかけてください：</h3>
+                    <textarea id="player-input" placeholder="ここに入力してください..." rows="3"></textarea>
+                    <button id="submit-btn">話しかける</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="screen">
+            <h1 id="result-title"></h1>
+            <div id="result-message"></div>
+            <div id="final-scores">
+                <div class="final-score">
+                    <span id="final-player-label">ママ</span>: <span id="final-player-score">0</span>
+                </div>
+                <div class="final-score">
+                    <span id="final-ai-label">パパ</span>: <span id="final-ai-score">0</span>
+                </div>
+            </div>
+            <button id="play-again-btn">もう一度遊ぶ</button>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="crying-sound" preload="auto">
+        <source src="/sounds/crying.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="laughing-sound" preload="auto">
+        <source src="/sounds/laughing.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

@@ -1,29 +1,41 @@
 # 🍼 ママとパパどっちが好きなの？  
 **The Battle for Baby's First Words**
 
-## 🎮 Overview
+## 🎮 Quick Start
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Start the server:**
+   ```bash
+   npm start
+   ```
+
+3. **Open your browser:**
+   Navigate to `http://localhost:3000`
+
+## 🎯 Overview
 
 "ママ" or "パパ"... or maybe... "バカ"!?
 
 **最初言葉バトル！** is a fast, fun, anime-style 1-minute showdown where two parents — one human and one AI — compete to influence their baby's very first word.
 
-But there's a twist: a third character joins the fight — a dog! The AI dog doesn’t speak human words, it just barks ("ワンワン") randomly, adding chaos to the scene 🐶.
-
----
+But there's a twist: a third character joins the fight — a dog! The AI dog doesn't speak human words, it just barks ("ワンワン") randomly, adding chaos to the scene 🐶.
 
 ## 🕹 How It Works
 
 - Player chooses to be **ママ** or **パパ**.
 - The player types their character's dialogue freely (in Japanese).
 - The AI parent generates funny or emotional responses — sometimes related, sometimes totally off-topic.
-- The AI **dog** just barks or makes “dog sounds” randomly during the game.
+- The AI **dog** just barks or makes "dog sounds" randomly during the game.
 - You have **1 minute** to win over the baby through words.
 - At the end, the baby says their **first word**, with a fun animation:
-  - Laughing if it’s a silly or "bad" word
+  - Laughing if it's a silly or "bad" word
   - Emotional reactions depending on the outcome
 
-Will the baby say “ママ”? “パパ”? Or something completely unexpected like “マンマ” or “バ
-カ”!?
+Will the baby say "ママ"? "パパ"? Or something completely unexpected like "マンマ" or "バカ"!?
 
 ---
 
@@ -67,6 +79,35 @@ Players must enter dialogue in Japanese, and all AI responses and UI are also in
 
 ---
 
+## 🚀 Features
+
+- **Real-time multiplayer** using Socket.IO
+- **Anime-style character animations**
+- **Audio effects** (crying and laughing)
+- **Two difficulty modes**
+- **Japanese language interface**
+- **Surprise game elements**
+- **Score tracking and winner determination**
+
+## 🛠 Development
+
+For development with auto-restart:
+```bash
+npm run dev
+```
+
+## 🔧 Optional: OpenAI Integration
+
+To use dynamic AI responses instead of pre-written ones:
+
+1. Copy `.env.example` to `.env`
+2. Add your OpenAI API key to `.env`
+3. Uncomment OpenAI integration code in `server.js`
+
 ## 🔧 Tech Stack
 
-- AI: OpenAI GPT-4o
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Backend**: Node.js, Express.js
+- **Real-time**: Socket.IO
+- **AI**: OpenAI GPT-4o (optional)
+- **Audio**: HTML5 Audio API

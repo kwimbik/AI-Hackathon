@@ -1,0 +1,400 @@
+// Game State
+const gameState = {
+    mode: null,
+    playerCharacter: null,
+    aiCharacter: null,
+    playerScore: 0,
+    aiScore: 0,
+    timeRemaining: 60,
+    timerInterval: null,
+    gameActive: false,
+    currentOptions: [],
+    aiResponses: {
+        mom: [
+            "ママよ〜！ママって言って〜！",
+            "ママのことが大好きでしょ？",
+            "ママはいつもそばにいるよ〜",
+            "ママって呼んでくれたら抱っこしてあげる！",
+            "ママの声が聞こえる？ママよ〜"
+        ],
+        dad: [
+            "パパだよ〜！パパって言ってごらん！",
+            "パパと遊ぼう！楽しいよ〜",
+            "パパがいちばん好きでしょ？",
+            "パパって言えたらたかいたかいしてあげる！",
+            "パパの声わかるかな？パパだよ〜"
+        ]
+    },
+    easyModeOptions: {
+        mom: [
+            "ママ大好き！ママって言って！",
+            "ママのおっぱい美味しいでしょ？",
+            "ママと一緒にねんねしようね",
+            "ママのお歌聞きたい？",
+            "ママのぬくもりが一番でしょ？"
+        ],
+        dad: [
+            "パパと遊ぼう！楽しいよ！",
+            "パパの肩車は高いぞ〜",
+            "パパとお風呂入ろうね",
+            "パパのひげ、ちくちくする？",
+            "パパの大きな手、つかまえて！"
+        ]
+    }
+};
+
+// Sound Effects
+const sounds = {
+    crying: new Audio('sounds/crying.mp3'),
+    laughing: new Audio('sounds/laughing.mp3')
+};
+
+// DOM Elements
+const titleScreen = document.getElementById('title-screen');
+const gameScreen = document.getElementById('game-screen');
+const resultScreen = document.getElementById('result-screen');
+const modeSelection = document.querySelector('.mode-selection');
+const characterSelection = document.querySelector('.character-selection');
+const timerDisplay = document.getElementById('timer');
+const playerScoreDisplay = document.getElementById('player-score');
+const aiScoreDisplay = document.getElementById('ai-score');
+const playerLabel = document.getElementById('player-label');
+const aiLabel = document.getElementById('ai-label');
+const easyModeOptions = document.getElementById('easy-mode-options');
+const hardModeInput = document.getElementById('hard-mode-input');
+const playerInput = document.getElementById('player-input');
+const submitBtn = document.getElementById('submit-btn');
+
+// Initialize Event Listeners
+document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', selectMode);
+});
+
+document.querySelectorAll('.character-btn').forEach(btn => {
+    btn.addEventListener('click', selectCharacter);
+});
+
+document.querySelectorAll('.option-btn').forEach(btn => {
+    btn.addEventListener('click', selectEasyOption);
+});
+
+submitBtn.addEventListener('click', submitHardMode);
+playerInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        submitHardMode();
+    }
+});
+
+document.getElementById('play-again-btn').addEventListener('click', resetGame);
+
+// Game Functions
+function selectMode(e) {
+    gameState.mode = e.target.dataset.mode;
+    modeSelection.style.display = 'none';
+    characterSelection.style.display = 'block';
+}
+
+function selectCharacter(e) {
+    gameState.playerCharacter = e.target.dataset.character;
+    gameState.aiCharacter = gameState.playerCharacter === 'mom' ? 'dad' : 'mom';
+    
+    // Update labels
+    playerLabel.textContent = gameState.playerCharacter === 'mom' ? 'ママ' : 'パパ';
+    aiLabel.textContent = gameState.aiCharacter === 'mom' ? 'ママ' : 'パパ';
+    
+    startGame();
+}
+
+function startGame() {
+    titleScreen.classList.remove('active');
+    gameScreen.classList.add('active');
+    
+    // Reset scores
+    gameState.playerScore = 0;
+    gameState.aiScore = 0;
+    gameState.timeRemaining = 60;
+    updateScoreDisplay();
+    
+    // Show appropriate input area
+    if (gameState.mode === 'easy') {
+        easyModeOptions.style.display = 'block';
+        hardModeInput.style.display = 'none';
+        generateEasyOptions();
+    } else {
+        easyModeOptions.style.display = 'none';
+        hardModeInput.style.display = 'block';
+    }
+    
+    // Start timer
+    gameState.gameActive = true;
+    startTimer();
+    
+    // Start AI actions
+    startAIActions();
+    
+    // Schedule weird uncle appearance
+    scheduleWeirdUncle();
+    
+    // Start dog barking
+    startDogBarking();
+}
+
+function startTimer() {
+    timerDisplay.textContent = gameState.timeRemaining;
+    
+    gameState.timerInterval = setInterval(() => {
+        gameState.timeRemaining--;
+        timerDisplay.textContent = gameState.timeRemaining;
+        
+        if (gameState.timeRemaining <= 0) {
+            endGame();
+        }
+    }, 1000);
+}
+
+function updateScoreDisplay() {
+    playerScoreDisplay.textContent = gameState.playerScore;
+    aiScoreDisplay.textContent = gameState.aiScore;
+}
+
+function generateEasyOptions() {
+    const options = gameState.easyModeOptions[gameState.playerCharacter];
+    const shuffled = [...options].sort(() => Math.random() - 0.5);
+    gameState.currentOptions = shuffled.slice(0, 3);
+    
+    document.querySelectorAll('.option-btn').forEach((btn, index) => {
+        btn.textContent = gameState.currentOptions[index];
+    });
+}
+
+function selectEasyOption(e) {
+    if (!gameState.gameActive) return;
+    
+    const selectedText = e.target.textContent;
+    playerSpeak(selectedText);
+    
+    // Generate new options after a short delay
+    setTimeout(generateEasyOptions, 1000);
+}
+
+function submitHardMode() {
+    if (!gameState.gameActive) return;
+    
+    const text = playerInput.value.trim();
+    if (text) {
+        playerSpeak(text);
+        playerInput.value = '';
+    }
+}
+
+function playerSpeak(text) {
+    const playerCharacter = document.getElementById(gameState.playerCharacter);
+    showSpeechBubble(playerCharacter, text);
+    
+    // Calculate baby's reaction
+    const reaction = calculateBabyReaction(text, gameState.playerCharacter);
+    
+    if (reaction > 0) {
+        gameState.playerScore += reaction;
+        babyReact('happy');
+        sounds.laughing.play();
+    } else {
+        babyReact('neutral');
+    }
+    
+    updateScoreDisplay();
+}
+
+function aiSpeak() {
+    if (!gameState.gameActive) return;
+    
+    const aiCharacter = document.getElementById(gameState.aiCharacter);
+    const responses = gameState.aiResponses[gameState.aiCharacter];
+    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+    
+    showSpeechBubble(aiCharacter, randomResponse);
+    
+    // AI scores points randomly
+    if (Math.random() > 0.3) {
+        gameState.aiScore += Math.floor(Math.random() * 3) + 1;
+        babyReact('happy');
+        sounds.laughing.play();
+    }
+    
+    updateScoreDisplay();
+}
+
+function showSpeechBubble(character, text) {
+    const bubble = character.querySelector('.speech-bubble');
+    const bubbleText = bubble.querySelector('.bubble-text');
+    
+    bubbleText.textContent = text;
+    bubble.style.display = 'block';
+    character.classList.add('reacting');
+    
+    setTimeout(() => {
+        bubble.style.display = 'none';
+        character.classList.remove('reacting');
+    }, 3000);
+}
+
+function babyReact(mood) {
+    const baby = document.getElementById('baby');
+    const babySprite = baby.querySelector('.character-sprite');
+    
+    if (mood === 'happy') {
+        babySprite.textContent = '😊';
+        setTimeout(() => {
+            babySprite.textContent = '👶';
+        }, 2000);
+    } else if (mood === 'cry') {
+        babySprite.textContent = '😭';
+        sounds.crying.play();
+        setTimeout(() => {
+            babySprite.textContent = '👶';
+        }, 2000);
+    }
+}
+
+function calculateBabyReaction(text, speaker) {
+    // Simple scoring based on keywords
+    let score = 0;
+    const lowerText = text.toLowerCase();
+    
+    // Check for character name
+    if ((speaker === 'mom' && lowerText.includes('ママ')) ||
+        (speaker === 'dad' && lowerText.includes('パパ'))) {
+        score += 2;
+    }
+    
+    // Check for positive words
+    const positiveWords = ['好き', '大好き', '愛', 'だっこ', '遊ぶ', '楽しい'];
+    positiveWords.forEach(word => {
+        if (text.includes(word)) score += 1;
+    });
+    
+    return score;
+}
+
+function startAIActions() {
+    // AI speaks every 3-5 seconds
+    const aiInterval = setInterval(() => {
+        if (!gameState.gameActive) {
+            clearInterval(aiInterval);
+            return;
+        }
+        aiSpeak();
+    }, 3000 + Math.random() * 2000);
+}
+
+function startDogBarking() {
+    const dog = document.getElementById('dog');
+    
+    const barkInterval = setInterval(() => {
+        if (!gameState.gameActive) {
+            clearInterval(barkInterval);
+            return;
+        }
+        
+        if (Math.random() > 0.7) {
+            showSpeechBubble(dog, 'ワンワン！');
+            
+            // Small chance baby responds to dog
+            if (Math.random() > 0.8) {
+                const baby = document.getElementById('baby');
+                showSpeechBubble(baby, 'ワンワン！');
+                babyReact('happy');
+            }
+        }
+    }, 5000);
+}
+
+function scheduleWeirdUncle() {
+    // Appear between 30-50 seconds
+    const appearTime = 30 + Math.random() * 20;
+    
+    setTimeout(() => {
+        if (!gameState.gameActive) return;
+        
+        const weirdUncle = document.getElementById('weird-uncle');
+        weirdUncle.style.display = 'block';
+        
+        setTimeout(() => {
+            showSpeechBubble(weirdUncle, 'おじさんだよ〜！');
+            
+            // Small chance baby says おじさん
+            if (Math.random() > 0.7) {
+                setTimeout(() => {
+                    const baby = document.getElementById('baby');
+                    showSpeechBubble(baby, 'おじさん！');
+                    babyReact('happy');
+                }, 1500);
+            }
+        }, 500);
+    }, appearTime * 1000);
+}
+
+function endGame() {
+    gameState.gameActive = false;
+    clearInterval(gameState.timerInterval);
+    
+    // Determine winner
+    let resultTitle, resultMessage;
+    const baby = document.getElementById('baby');
+    
+    if (gameState.playerScore > gameState.aiScore) {
+        resultTitle = '勝利！🎉';
+        resultMessage = `赤ちゃんの初めての言葉は「${gameState.playerCharacter === 'mom' ? 'ママ' : 'パパ'}」でした！`;
+        showSpeechBubble(baby, gameState.playerCharacter === 'mom' ? 'ママ！' : 'パパ！');
+    } else if (gameState.aiScore > gameState.playerScore) {
+        resultTitle = '敗北...😢';
+        resultMessage = `赤ちゃんの初めての言葉は「${gameState.aiCharacter === 'mom' ? 'ママ' : 'パパ'}」でした...`;
+        showSpeechBubble(baby, gameState.aiCharacter === 'mom' ? 'ママ！' : 'パパ！');
+    } else {
+        // Tie - random outcome
+        const outcomes = ['ワンワン', 'おじさん', 'まんま'];
+        const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+        resultTitle = '引き分け！😮';
+        resultMessage = `なんと赤ちゃんの初めての言葉は「${randomOutcome}」でした！`;
+        showSpeechBubble(baby, randomOutcome + '！');
+    }
+    
+    // Wait a moment before showing results
+    setTimeout(() => {
+        gameScreen.classList.remove('active');
+        resultScreen.classList.add('active');
+        
+        document.getElementById('result-title').textContent = resultTitle;
+        document.getElementById('result-message').textContent = resultMessage;
+        document.getElementById('final-player-label').textContent = playerLabel.textContent;
+        document.getElementById('final-ai-label').textContent = aiLabel.textContent;
+        document.getElementById('final-player-score').textContent = gameState.playerScore;
+        document.getElementById('final-ai-score').textContent = gameState.aiScore;
+    }, 3000);
+}
+
+function resetGame() {
+    // Reset game state
+    gameState.mode = null;
+    gameState.playerCharacter = null;
+    gameState.aiCharacter = null;
+    gameState.playerScore = 0;
+    gameState.aiScore = 0;
+    gameState.timeRemaining = 60;
+    gameState.gameActive = false;
+    
+    // Hide weird uncle
+    document.getElementById('weird-uncle').style.display = 'none';
+    
+    // Reset screens
+    resultScreen.classList.remove('active');
+    titleScreen.classList.add('active');
+    modeSelection.style.display = 'block';
+    characterSelection.style.display = 'none';
+    
+    // Clear any remaining speech bubbles
+    document.querySelectorAll('.speech-bubble').forEach(bubble => {
+        bubble.style.display = 'none';
+    });
+}
