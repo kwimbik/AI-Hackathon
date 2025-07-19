@@ -432,7 +432,7 @@ function endGame() {
             }
         } else {
             // Neither has 20+ points or it's a tie - random silly word
-            const sillWords = ['ワンワン', 'おじさん'];
+            const sillWords = ['ワンワン', 'バカ'];
             babyFirstWord = sillWords[Math.floor(Math.random() * sillWords.length)];
             resultTitle = '予想外！😮';
             resultMessage = `なんと赤ちゃんの初めての言葉は「${babyFirstWord}」でした！`;
@@ -440,8 +440,8 @@ function endGame() {
             // Select sound to play
             if (babyFirstWord === 'ワンワン') {
                 soundToPlay = sounds.wanwan;
-            } else if (babyFirstWord === 'おじさん') {
-                soundToPlay = sounds.ojisan;
+            } else if (babyFirstWord === 'バカ') {
+                soundToPlay = sounds.baka;
             }
         }
     } else {
