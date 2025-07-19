@@ -27,7 +27,7 @@ The project is in the initial planning phase with:
 
 ### Technical Requirements
 - **Language**: All game text and UI must be in Japanese
-- **AI Integration**: OpenAI GPT-4o for AI parent and dog responses
+- **AI Integration**: OpenAI GPT-4o for AI parent and dog responses. Generate few strings and then keep reusing them.
 - **Scene Layout**: Baby in center bed, parents on sides, dog at foot, window in background
 
 ## Development Guidelines
