@@ -353,7 +353,20 @@ function startDogBarking() {
         }
         
         if (Math.random() > 0.7) {
+            // Change dog sprite to speaking version
+            const dogSprite = dog.querySelector('.character-sprite');
+            const originalSrc = dogSprite.getAttribute('data-normal');
+            const speakingSrc = dogSprite.getAttribute('data-speaking');
+            
+            dogSprite.src = speakingSrc;
+            
             showSpeechBubble(dog, 'ワンワン！');
+            sounds.wanwan.play();
+            
+            // Revert to normal sprite after barking
+            setTimeout(() => {
+                dogSprite.src = originalSrc;
+            }, 1500);
             
             // Small chance baby responds to dog
             if (Math.random() > 0.8) {
