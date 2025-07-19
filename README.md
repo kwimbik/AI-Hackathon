@@ -70,7 +70,3 @@ Players must enter dialogue in Japanese, and all AI responses and UI are also in
 ## 🔧 Tech Stack
 
 - AI: OpenAI GPT-4o
-
-## ※ shered document
-[shared document](https://docs.google.com/document/d/1Ey-zBe_GtNUO0AxkS12UrO053daAJqSQkNaw6zoABdw/edit?usp=sharing)
-
