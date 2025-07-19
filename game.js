@@ -471,7 +471,7 @@ function endGame() {
             }
         } else {
             // Tie - random outcome
-            const outcomes = ['ワンワン', 'おじさん'];
+            const outcomes = ['ワンワン', 'バカ'];
             babyFirstWord = outcomes[Math.floor(Math.random() * outcomes.length)];
             resultTitle = '引き分け！😮';
             resultMessage = `なんと赤ちゃんの初めての言葉は「${babyFirstWord}」でした！`;
@@ -479,8 +479,8 @@ function endGame() {
             // Select sound to play
             if (babyFirstWord === 'ワンワン') {
                 soundToPlay = sounds.dog_sound;
-            } else if (babyFirstWord === 'おじさん') {
-                soundToPlay = sounds.ojisan;
+            } else if (babyFirstWord === 'バカ') {
+                soundToPlay = sounds.baka;
             }
         }
     }
