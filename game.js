@@ -497,6 +497,13 @@ function endGame() {
     document.getElementById('final-player-score').textContent = gameState.playerScore;
     document.getElementById('final-ai-score').textContent = gameState.aiScore;
     
+    // Ensure result baby speech bubble is visible
+    const resultBabyBubble = document.querySelector('#result-baby .speech-bubble');
+    if (resultBabyBubble) {
+        resultBabyBubble.style.display = 'block';
+        resultBabyBubble.style.visibility = 'visible';
+    }
+    
     // Show baby's first word after a short delay
     setTimeout(() => {
         document.getElementById('baby-first-word').textContent = babyFirstWord + '！';

@@ -416,6 +416,8 @@ body {
     min-width: 200px;
     background-color: #ffeb3b;
     border: 3px solid #ff9800;
+    display: block !important;
+    visibility: visible !important;
 }
 
 #result-title {
