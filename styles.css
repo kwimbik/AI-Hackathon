@@ -35,19 +35,116 @@ body {
 #title-screen {
     background: linear-gradient(to bottom, #87ceeb, #f0f8ff);
     text-align: center;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.title-header {
+    margin-bottom: 2rem;
 }
 
 #title-screen h1 {
     font-size: 3rem;
     color: #ff6b6b;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
 #title-screen h2 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: #4a4a4a;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.catchphrase {
+    margin-bottom: 2rem;
+}
+
+.main-catchphrase {
+    font-size: 1.4rem;
+    color: #ff6b6b;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.sub-catchphrase {
+    font-size: 1.1rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* Game Explanation */
+.game-explanation {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin: 2rem auto;
+    max-width: 600px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 2px solid #ff9999;
+}
+
+.game-explanation h3 {
+    font-size: 1.5rem;
+    color: #ff6b6b;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.explanation-content {
+    text-align: left;
+}
+
+.explanation-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    padding: 0.5rem;
+    background: rgba(255, 235, 235, 0.5);
+    border-radius: 10px;
+}
+
+.explanation-item .emoji {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    min-width: 2rem;
+}
+
+.explanation-item .text {
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.4;
+}
+
+.surprise-note {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 0.7rem;
+    background: rgba(255, 193, 7, 0.2);
+    border-radius: 10px;
+    border: 2px dashed #ffc107;
+}
+
+.surprise-note .emoji {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+    min-width: 2rem;
+}
+
+.surprise-note .text {
+    font-size: 1rem;
+    color: #e65100;
+    font-weight: bold;
+    line-height: 1.4;
 }
 
 .mode-selection, .character-selection {
