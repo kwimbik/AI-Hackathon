@@ -52,7 +52,8 @@ const sounds = {
     papa: new Audio('sounds/papa.m4a'),
     papaiya: new Audio('sounds/papaiya.m4a'),
     wanwan: new Audio('sounds/wanwan.m4a'),
-    baka: new Audio('sounds/baka.m4a')
+    baka: new Audio('sounds/baka.m4a'),
+    ojisan: new Audio('sounds/ojisan.m4a')
 };
 
 // Set volume to maximum for all sounds
@@ -376,6 +377,7 @@ function scheduleWeirdUncle() {
         
         setTimeout(() => {
             showSpeechBubble(weirdUncle, 'おじさんだよ〜！');
+            sounds.ojisan.play(); // 変なおじさんが話すときにojisan.m4aサウンドを再生
             
             // Small chance baby says おじさん
             if (Math.random() > 0.7) {

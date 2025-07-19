@@ -115,7 +115,10 @@ body {
     position: relative;
     width: 800px;
     height: 500px;
-    background: linear-gradient(to bottom, #e6f3ff 0%, #e6f3ff 60%, #d4a373 60%, #c19660 100%);
+    background-image: url('images/room.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     border-radius: 20px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.2);
 }
@@ -123,13 +126,12 @@ body {
 /* Window */
 .window {
     position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px;
-    height: 150px;
-    background-color: #87ceeb;
-    border: 5px solid #654321;
+    top: 48px;
+    left: 120px;
+    width: 192px;
+    height: 200px;
+    background-color: transparent;
+    border: none;
     border-radius: 10px;
 }
 
@@ -153,21 +155,20 @@ body {
 
 /* Character Positions */
 .mom {
-    left: 100px;
-    top: 50%;
-    transform: translateY(-50%);
+    left: 50px;
+    top: 200px;
 }
 
 .dad {
-    right: 100px;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 50px;
+    top: 200px;
 }
 
 .baby {
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    left: 488px;
+    top: 388px;
+    width: 100px;
+    height: 320px;
 }
 
 .baby .character-sprite {
@@ -176,9 +177,8 @@ body {
 }
 
 .dog {
-    bottom: 50px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 30px;
+    left: 350px;
 }
 
 .dog .character-sprite {
