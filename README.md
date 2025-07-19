@@ -33,7 +33,8 @@ Will the baby say “ママ”? “パパ”? Or something completely unexpected
 - 🧑‍🍼 The player and AI parent stand on each side of the bed, facing each other.
 - 🐶 The AI dog stands at the foot of the bed, occasionally barking.
 - 🌇 A window is behind the baby — it's part of the background scenery.
-- Later mode models will be used for specific actions like turning to a dog or reacting to 変なおじさん
+- Later mode models will be used for specific actions like turning to a dog or reacting to 変なおじさん,
+they will be in Models folder
 
 ## Prepared Sounds
 - Baby’s crying sound is “crying.mp3”
@@ -61,6 +62,9 @@ Choose wisely — parenting is not for the weak!
 
 **The game is entirely in Japanese.**  
 Players must enter dialogue in Japanese, and all AI responses and UI are also in Japanese.
+
+## Github
+- Always commit bigger changes to github
 
 ---
 
