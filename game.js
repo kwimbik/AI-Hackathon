@@ -52,6 +52,7 @@ const sounds = {
     papa: new Audio('sounds/papa.m4a'),
     papaiya: new Audio('sounds/papaiya.m4a'),
     wanwan: new Audio('sounds/wanwan.m4a'),
+    dog_sound: new Audio('sounds/dog_sound.mp3'),
     baka: new Audio('sounds/baka.m4a'),
     ojisan: new Audio('sounds/ojisan.m4a')
 };
@@ -151,7 +152,7 @@ function startGame() {
     scheduleWeirdUncle();
     
     // Start dog barking
-    startDogBarking();
+    scheduleDogBark();
 }
 
 function startTimer() {
@@ -343,39 +344,35 @@ function startAIActions() {
     }, 3000 + Math.random() * 2000);
 }
 
-function startDogBarking() {
-    const dog = document.getElementById('dog');
-    
-    const barkInterval = setInterval(() => {
-        if (!gameState.gameActive) {
-            clearInterval(barkInterval);
-            return;
-        }
+function scheduleDogBark() {
+    // Dog barks once when 14 seconds remaining (6 seconds after game starts for 20-second game)
+    setTimeout(() => {
+        if (!gameState.gameActive || gameState.timeRemaining !== 14) return;
         
-        if (Math.random() > 0.7) {
-            // Change dog sprite to speaking version
-            const dogSprite = dog.querySelector('.character-sprite');
-            const originalSrc = dogSprite.getAttribute('data-normal');
-            const speakingSrc = dogSprite.getAttribute('data-speaking');
-            
-            dogSprite.src = speakingSrc;
-            
-            showSpeechBubble(dog, 'ワンワン！');
-            sounds.wanwan.play();
-            
-            // Revert to normal sprite after barking
-            setTimeout(() => {
-                dogSprite.src = originalSrc;
-            }, 1500);
-            
-            // Small chance baby responds to dog
-            if (Math.random() > 0.8) {
-                const baby = document.getElementById('baby');
-                showSpeechBubble(baby, 'ワンワン！');
-                babyReact('happy');
-            }
+        const dog = document.getElementById('dog');
+        
+        // Change dog sprite to speaking version
+        const dogSprite = dog.querySelector('.character-sprite');
+        const originalSrc = dogSprite.getAttribute('data-normal');
+        const speakingSrc = dogSprite.getAttribute('data-speaking');
+        
+        dogSprite.src = speakingSrc;
+        
+        showSpeechBubble(dog, 'ワンワン！');
+        sounds.dog_sound.play();
+        
+        // Revert to normal sprite after barking
+        setTimeout(() => {
+            dogSprite.src = originalSrc;
+        }, 1500);
+        
+        // Small chance baby responds to dog
+        if (Math.random() > 0.8) {
+            const baby = document.getElementById('baby');
+            showSpeechBubble(baby, 'ワンワン！');
+            babyReact('happy');
         }
-    }, 5000);
+    }, 6000); // 6 seconds after game starts (when 14 seconds remain in a 20-second game)
 }
 
 function scheduleWeirdUncle() {
@@ -439,9 +436,9 @@ function endGame() {
             
             // Select sound to play
             if (babyFirstWord === 'ワンワン') {
-                soundToPlay = sounds.wanwan;
-            } else if (babyFirstWord === 'バカ') {
-                soundToPlay = sounds.baka;
+                soundToPlay = sounds.dog_sound;
+            } else if (babyFirstWord === 'おじさん') {
+                soundToPlay = sounds.ojisan;
             }
         }
     } else {
@@ -481,7 +478,7 @@ function endGame() {
             
             // Select sound to play
             if (babyFirstWord === 'ワンワン') {
-                soundToPlay = sounds.wanwan;
+                soundToPlay = sounds.dog_sound;
             } else if (babyFirstWord === 'おじさん') {
                 soundToPlay = sounds.ojisan;
             }
