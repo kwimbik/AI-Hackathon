@@ -425,6 +425,25 @@ body {
     margin-bottom: 2rem;
 }
 
+#result-mode {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    padding: 8px 16px;
+    border-radius: 15px;
+    display: inline-block;
+}
+
+#result-mode.easy {
+    background-color: #4caf50;
+    color: white;
+}
+
+#result-mode.hard {
+    background-color: #f44336;
+    color: white;
+}
+
 #result-message {
     font-size: 1.5rem;
     margin-bottom: 2rem;

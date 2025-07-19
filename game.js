@@ -497,6 +497,16 @@ function endGame() {
     document.getElementById('final-player-score').textContent = gameState.playerScore;
     document.getElementById('final-ai-score').textContent = gameState.aiScore;
     
+    // Display the game mode/difficulty
+    const resultModeElement = document.getElementById('result-mode');
+    if (gameState.mode === 'easy') {
+        resultModeElement.textContent = 'よちよちモード';
+        resultModeElement.className = 'easy';
+    } else {
+        resultModeElement.textContent = 'ガチ育児モード';
+        resultModeElement.className = 'hard';
+    }
+    
     // Ensure result baby speech bubble is visible
     const resultBabyBubble = document.querySelector('#result-baby .speech-bubble');
     if (resultBabyBubble) {
