@@ -367,7 +367,7 @@ function startDogBarking() {
 
 function scheduleWeirdUncle() {
     // Appear between 30-50 seconds
-    const appearTime = 8;
+    const appearTime = 14;
     
     setTimeout(() => {
         if (!gameState.gameActive) return;
